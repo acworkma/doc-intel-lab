@@ -70,18 +70,27 @@ class AzureClients:
         try:
             print("🧪 Testing Azure Storage connection...")
             # Test storage connection by listing containers
-            containers = list(self.blob_service_client.list_containers(max_results=1))
-            print(f"✅ Storage connection successful. Found {len(list(self.blob_service_client.list_containers()))} containers.")
+            containers = []
+            container_names = []
+            for container in self.blob_service_client.list_containers():
+                containers.append(container)
+                container_names.append(container.name)
+                if len(containers) >= 10:  # Limit for performance
+                    break
+            
+            print(f"✅ Storage connection successful. Found {len(containers)}+ containers.")
             
             # Check if required containers exist
-            container_names = [container.name for container in self.blob_service_client.list_containers()]
-            
             if self.storage_container_name not in container_names:
-                print(f"⚠️  Source container '{self.storage_container_name}' not found. Available containers: {container_names}")
+                # Get all container names for error message
+                all_container_names = [c.name for c in self.blob_service_client.list_containers()]
+                print(f"⚠️  Source container '{self.storage_container_name}' not found. Available containers: {all_container_names}")
                 return False
                 
             if self.output_container_name not in container_names:
-                print(f"⚠️  Output container '{self.output_container_name}' not found. Available containers: {container_names}")
+                # Get all container names for error message  
+                all_container_names = [c.name for c in self.blob_service_client.list_containers()]
+                print(f"⚠️  Output container '{self.output_container_name}' not found. Available containers: {all_container_names}")
                 return False
             
             print("🧪 Testing Document Intelligence connection...")
