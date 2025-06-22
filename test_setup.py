@@ -17,8 +17,7 @@ def test_imports():
         ("azure.storage.blob", "BlobServiceClient"),
         ("azure.ai.documentintelligence", "DocumentIntelligenceClient"),
         ("azure.core.credentials", "AzureKeyCredential"),
-        ("dotenv", "load_dotenv"),
-        ("tqdm", "tqdm")
+        ("dotenv", "load_dotenv")
     ]
     
     failed_imports = []
